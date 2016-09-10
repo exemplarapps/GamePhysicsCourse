@@ -1,14 +1,24 @@
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2008
 
-
+Project("{570336E7-50BA-8830-A176-5DBF6B73987F}") = "Game Physics Course 1", "Assembly-CSharp.csproj", "{98ABC23E-BD78-FE2C-2D3C-21415C3E91D6}"
+EndProject
+Project("{570336E7-50BA-8830-A176-5DBF6B73987F}") = "Game Physics Course 1", "Assembly-UnityScript.unityproj", "{F7B0362E-4834-AEF5-A315-BAB8783C0A0D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-
+		{98ABC23E-BD78-FE2C-2D3C-21415C3E91D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98ABC23E-BD78-FE2C-2D3C-21415C3E91D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98ABC23E-BD78-FE2C-2D3C-21415C3E91D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98ABC23E-BD78-FE2C-2D3C-21415C3E91D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7B0362E-4834-AEF5-A315-BAB8783C0A0D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7B0362E-4834-AEF5-A315-BAB8783C0A0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7B0362E-4834-AEF5-A315-BAB8783C0A0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7B0362E-4834-AEF5-A315-BAB8783C0A0D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
