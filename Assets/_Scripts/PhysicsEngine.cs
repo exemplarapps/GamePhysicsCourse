@@ -3,40 +3,57 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class PhysicsEngine : MonoBehaviour {
-	public float mass;
-	public Vector3 velocityVector; //Average velocity this fixed update
-	public Vector3 netForceVector;
+	public float mass;				// kg
+	public Vector3 velocityVector; 	// N 
+	public Vector3 netForceVector;	// N
 	public bool showTrails = true;
 	
 	private List<Vector3> forceVectorList = new List<Vector3>();
 	private LineRenderer lineRenderer;
 	private int numberOfForces;
-	private Vector3 deltaS;
-
-
+	private Vector3 deltaS; //kN
+	private PhysicsEngine[] physicsEngineArray;
+	private const float bigG = 6.673e-11f;  			//[m^3 kg^-1 s^-1]
 	// Use this for initialization
 	void Start () {
-		deltaS = Vector3.zero;
+		//deltaS = Vector3.zero;
 		PrepareLines ();
+		physicsEngineArray = GameObject.FindObjectsOfType<PhysicsEngine> ();
 	}
 
 
 	void Update () {
-		//show trails if its enabled
-		if (showTrails) {
-			ShowTrails ();
-			return;
-		} 
-
-		lineRenderer.enabled = false;
-
 	}
 
 	void FixedUpdate () {
+		ShowTrails ();
+		CalculateGravity ();
 		UpdatePosition ();
 
 	}
 
+	void LateUpdate(){
+		//ShowTrails ();
+	}
+	public void CalculateGravity(){
+		foreach (PhysicsEngine peA in physicsEngineArray) {
+			foreach(PhysicsEngine peB in physicsEngineArray){
+				if(peA != peB && peA != this){
+					Debug.Log("computing force exerrted on " + peA.name + " due to gravity of " + peB.name);
+					Vector3 offset = peA.transform.position - peB.transform.position;
+					float rSquared = Mathf.Pow (offset.magnitude, 2f);
+					float gravityMagnitude = bigG * peA.mass * peB.mass / rSquared;
+					Vector3 gravityFeltVector = gravityMagnitude * offset.normalized;
+					peA.AddForce (-gravityFeltVector);
+				}
+			}
+		
+		}
+
+	}
+	public void AddForce(Vector3 forceVector){
+		forceVectorList.Add (forceVector);
+	}
 	void UpdatePosition(){
 		//sum the forces and clear the list
 		netForceVector = Vector3.zero;
@@ -49,9 +66,10 @@ public class PhysicsEngine : MonoBehaviour {
 		forceVectorList.Clear ();
 
 		//update the position
-		velocityVector += (netForceVector / mass) * Time.deltaTime;
-		deltaS += velocityVector * Time.deltaTime;
-		transform.position = deltaS;
+		Vector3 accelerationVector = netForceVector / mass;
+		velocityVector += accelerationVector * Time.deltaTime;
+		//deltaS += velocityVector * Time.deltaTime;
+		transform.position += velocityVector * Time.deltaTime;//deltaS;
 	}
 
 
@@ -66,18 +84,24 @@ public class PhysicsEngine : MonoBehaviour {
 
 
 	void ShowTrails(){
-		lineRenderer.enabled = true;
-		numberOfForces = forceVectorList.Count;
-		lineRenderer.SetVertexCount(numberOfForces * 2);
-		int i = 0;
-		foreach (Vector3 forceVector in forceVectorList) {
-			lineRenderer.SetPosition(i, Vector3.zero);
-			lineRenderer.SetPosition(i+1, -forceVector);
-			i = i + 2;
+		//show trails if its enabled
+		if (showTrails) {
+			lineRenderer.enabled = true;
+			numberOfForces = forceVectorList.Count; 
+			lineRenderer.SetVertexCount(numberOfForces * 2);
+			int i = 0;
+			//Debug.Log (gameObject.name + " forces = " + numberOfForces.ToString ());
+			foreach (Vector3 forceVector in forceVectorList) {
+
+				//Debug.Log (gameObject.name + " force = " + forceVector);
+				lineRenderer.SetPosition(i, Vector3.zero);
+				lineRenderer.SetPosition(i+1, -forceVector);
+				i = i + 2;
+			}
+		} else {
+
+			lineRenderer.enabled = false;
 		}
 	}
 
-	public void AddForce(Vector3 forceVector){
-		forceVectorList.Add (forceVector);
-	}
 }
